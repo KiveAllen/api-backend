@@ -1,8 +1,8 @@
 -- 创建库
-create database if not exists yuapi;
+create database if not exists api;
 
 -- 切换库
-use yuapi;
+use api;
 
 -- 用户表
 create table if not exists user
