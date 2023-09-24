@@ -1,21 +1,19 @@
 package com.api.project.controller;
 
+import com.api.apiclientsdk.client.ApiClient;
 import com.api.project.annotation.AuthCheck;
+import com.api.project.common.*;
 import com.api.project.constant.CommonConstant;
 import com.api.project.exception.BusinessException;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.api.project.common.BaseResponse;
-import com.api.project.common.DeleteRequest;
-import com.api.project.common.ErrorCode;
-import com.api.project.common.ResultUtils;
 import com.api.project.model.dto.interfaceinfo.InterfaceInfoAddRequest;
 import com.api.project.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
-import com.api.project.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import com.api.project.model.entity.InterfaceInfo;
 import com.api.project.model.entity.User;
+import com.api.project.model.enums.InterfaceInfoStatusEnum;
 import com.api.project.service.InterfaceInfoService;
 import com.api.project.service.UserService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -26,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 帖子接口
+ * 接口管理
  *
  * @author api
  */
@@ -40,6 +38,9 @@ public class InterfaceInfoController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private ApiClient apiClient;
 
     // region 增删改查
 
@@ -97,33 +98,77 @@ public class InterfaceInfoController {
     }
 
     /**
-     * 更新
+     * 上线
      *
-     * @param interfaceInfoUpdateRequest
+     * @param idRequest
      * @param request
      * @return
      */
-    @PostMapping("/update")
-    public BaseResponse<Boolean> updateInterfaceInfo(@RequestBody InterfaceInfoUpdateRequest interfaceInfoUpdateRequest,
+    @PostMapping("/online")
+    @AuthCheck(mustRole = "admin")
+    public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest,
                                             HttpServletRequest request) {
-        if (interfaceInfoUpdateRequest == null || interfaceInfoUpdateRequest.getId() <= 0) {
+        if (idRequest == null || idRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        InterfaceInfo interfaceInfo = new InterfaceInfo();
-        BeanUtils.copyProperties(interfaceInfoUpdateRequest, interfaceInfo);
-        // 参数校验
-        interfaceInfoService.validInterfaceInfo(interfaceInfo, false);
-        User user = userService.getLoginUser(request);
-        long id = interfaceInfoUpdateRequest.getId();
-        // 判断是否存在
+
+        //1、校验接口是否存在
+        //获取idRequest对象的id属性值
+        long id = idRequest.getId();
         InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
-        if (oldInterfaceInfo == null) {
+        //查询为空
+        if (oldInterfaceInfo==null){
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
-        // 仅本人或管理员可修改
-        if (!oldInterfaceInfo.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        //2、判断接口是否可以调用
+        com.api.apiclientsdk.model.User user = new com.api.apiclientsdk.model.User();
+        user.setUserName("test");
+        String userName = apiClient.getUserNameByPost(user);
+        if(StringUtils.isBlank(userName)){
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"接口验证失败");
         }
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        //3、修改接口数据库的状态字段为上线
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.ONLINE.getValue());
+        boolean result = interfaceInfoService.updateById(interfaceInfo);
+        return ResultUtils.success(result);
+    }
+
+    /**
+     * 下线
+     *
+     * @param idRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/offline")
+    @AuthCheck(mustRole = "admin")
+    public BaseResponse<Boolean> offlineInterfaceInfo(@RequestBody IdRequest idRequest,
+                                                     HttpServletRequest request) {
+        if (idRequest == null || idRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        //1、校验接口是否存在
+        //获取idRequest对象的id属性值
+        long id = idRequest.getId();
+        InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
+        //查询为空
+        if (oldInterfaceInfo==null){
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        //2、判断接口是否可以调用
+        com.api.apiclientsdk.model.User user = new com.api.apiclientsdk.model.User();
+        user.setUserName("test");
+        String userName = apiClient.getUserNameByPost(user);
+        if(StringUtils.isBlank(userName)){
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"接口验证失败");
+        }
+        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        interfaceInfo.setId(id);
+        //3、修改接口数据库的状态字段为上线
+        interfaceInfo.setStatus(InterfaceInfoStatusEnum.OFFLINE.getValue());
         boolean result = interfaceInfoService.updateById(interfaceInfo);
         return ResultUtils.success(result);
     }
