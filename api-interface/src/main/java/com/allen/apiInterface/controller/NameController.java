@@ -1,7 +1,6 @@
 package com.allen.apiInterface.controller;
 
 import com.api.apiclientsdk.model.User;
-import com.api.apiclientsdk.utils.SignUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,9 +33,9 @@ public class NameController {
         String body = request.getHeader("body");
 
         // todo 实际情况应该是去数据库中查是否已分配给用户
-        if (!accessKey.equals("allen")) {
-            throw new RuntimeException("无权限");
-        }
+//        if (!accessKey.equals("allen")) {
+//            throw new RuntimeException("无权限");
+//        }
         // 校验随机数，模拟一下，直接判断nonce是否大于10000
         if (Long.parseLong(nonce) > 10000) {
             throw new RuntimeException("无权限");
@@ -49,11 +48,11 @@ public class NameController {
         }
 
         // todo 实际情况中是从数据库查出 secretKey
-        String serverSign = SignUtils.genSign(body,"abcdefgh");
-        // 生成的签名不一致，抛异常
-        if(!sign.equals(serverSign)){
-            throw new RuntimeException("无权限");
-        }
+//        String serverSign = SignUtils.genSign(body,"abcdefgh");
+//        // 生成的签名不一致，抛异常
+//        if(!sign.equals(serverSign)){
+//            throw new RuntimeException("无权限");
+//        }
         return "POST 用户名字是" + user.getUserName();
     }
 }
