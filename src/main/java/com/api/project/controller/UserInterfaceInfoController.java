@@ -1,6 +1,5 @@
 package com.api.project.controller;
 
-import com.api.apiclientsdk.client.ApiClient;
 import com.api.project.annotation.AuthCheck;
 import com.api.project.common.BaseResponse;
 import com.api.project.common.DeleteRequest;
