@@ -23,7 +23,7 @@ create table if not exists user
         unique (userAccount)
 ) comment '用户';
 
--- 帖子表
+-- 帖子表 (测试表)
 create table if not exists post
 (
     id            bigint auto_increment comment 'id' primary key,
