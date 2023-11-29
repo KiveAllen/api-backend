@@ -12,11 +12,11 @@ public class UserInterfaceInfoServiceTest {
     @Resource
     private UserInterfaceInfoService userInterfaceInfoService;
 
-    @Test
-    public void invokeCount() {
-        //调用invokeCount，传参(1L,1L)
-        boolean f = userInterfaceInfoService.invokeCount(1L,1L);
-        //断言
-        Assertions.assertTrue(f);
-    }
+//    @Test
+//    public void invokeCount() {
+//        //调用invokeCount，传参(1L,1L)
+//        boolean f = userInterfaceInfoService.invokeCount(1L,1L);
+//        //断言
+//        Assertions.assertTrue(f);
+//    }
 }

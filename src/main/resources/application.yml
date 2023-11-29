@@ -34,5 +34,5 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
 api:
   client:
-    access-key: api
-    secret-key: abcdefgh
+    access-key: 5192875814318ddcd5e3b0051560b42b
+    secret-key: a5bc1401d4b52fc67a64282ace66428c

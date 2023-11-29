@@ -20,14 +20,16 @@ import static com.api.apiclientsdk.utils.SignUtils.genSign;
  */
 public class ApiClient {
 
-    public ApiClient(String accessKey, String secretKey) {
-        this.accessKey = accessKey;
-        this.secretKey = secretKey;
-    }
+    private static final String GATEWAY_HOST = "http://localhost:8090";
 
     private final String accessKey;
 
     private final String secretKey;
+
+    public ApiClient(String accessKey, String secretKey) {
+        this.accessKey = accessKey;
+        this.secretKey = secretKey;
+    }
 
     // 使用GET方法从服务器获取名称信息
     public String getNameByGet(String name) {
@@ -36,7 +38,7 @@ public class ApiClient {
         // 将"name"参数添加到映射中
         paramMap.put("name", name);
         // 使用HttpUtil工具发起GET请求，并获取服务器返回的结果
-        String result = HttpUtil.get("http://localhost:8123/api/name/", paramMap);
+        String result = HttpUtil.get(GATEWAY_HOST + "/api/name/", paramMap);
         // 打印服务器返回的结果
         System.out.println(result);
         // 返回服务器返回的结果
@@ -44,12 +46,12 @@ public class ApiClient {
     }
 
     // 使用POST方法从服务器获取名称信息
-    public String getNameByPost(@RequestParam String name) {
+    public String getNameByPost( String name) {
         // 可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
         // 使用HttpUtil工具发起POST请求，并获取服务器返回的结果
-        String result = HttpUtil.post("http://localhost:8123/api/name/", paramMap);
+        String result = HttpUtil.post(GATEWAY_HOST + "/api/name/", paramMap);
         System.out.println(result);
         return result;
     }
@@ -60,8 +62,6 @@ public class ApiClient {
         Map<String, String> hashMap = new HashMap<>();
         // 将 "accessKey" 和其对应的值放入 map 中
         hashMap.put("accessKey", accessKey);
-        // 将 "secretKey" 和其对应的值放入 map 中
-//        hashMap.put("secretKey", secretKey);
         //生成随机数
         hashMap.put("nonce", RandomUtil.randomNumbers(4));
         //请求体内容
@@ -69,14 +69,14 @@ public class ApiClient {
         //当前时间戳
         hashMap.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
         //签名
-        hashMap.put("sign", genSign(body,secretKey));
+        hashMap.put("sign", genSign(body, secretKey));
         // 返回构造的请求头 map
         return hashMap;
     }
 
-    public String getUserNameByPost(@RequestBody User user) {
+    public String getUserNameByPost(User user) {
         String json = JSONUtil.toJsonStr(user);
-        HttpResponse httpResponse = HttpRequest.post("http://localhost:8123/api/name/user")
+        HttpResponse httpResponse = HttpRequest.post(GATEWAY_HOST + "/api/name/user")
                 // 添加前面构造的请求头
                 .addHeaders(getHeaderMap(json))
                 .body(json)
