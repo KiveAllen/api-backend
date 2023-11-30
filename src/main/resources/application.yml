@@ -36,3 +36,12 @@ api:
   client:
     access-key: 5192875814318ddcd5e3b0051560b42b
     secret-key: a5bc1401d4b52fc67a64282ace66428c
+dubbo:
+  application:
+    name: dubbo-springboot-demo-provider
+  protocol:
+    name: dubbo
+    port: 22221
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848
