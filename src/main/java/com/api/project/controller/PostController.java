@@ -1,5 +1,6 @@
 package com.api.project.controller;
 
+import com.api.apicommon.model.entity.User;
 import com.api.project.annotation.AuthCheck;
 import com.api.project.constant.CommonConstant;
 import com.api.project.exception.BusinessException;
@@ -13,7 +14,6 @@ import com.api.project.model.dto.post.PostAddRequest;
 import com.api.project.model.dto.post.PostQueryRequest;
 import com.api.project.model.dto.post.PostUpdateRequest;
 import com.api.project.model.entity.Post;
-import com.api.project.model.entity.User;
 import com.api.project.service.PostService;
 import com.api.project.service.UserService;
 import lombok.extern.slf4j.Slf4j;

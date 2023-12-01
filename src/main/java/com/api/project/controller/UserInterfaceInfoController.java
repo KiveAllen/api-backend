@@ -1,5 +1,7 @@
 package com.api.project.controller;
 
+import com.api.apicommon.model.entity.User;
+import com.api.apicommon.model.entity.UserInterfaceInfo;
 import com.api.project.annotation.AuthCheck;
 import com.api.project.common.BaseResponse;
 import com.api.project.common.DeleteRequest;
@@ -11,8 +13,6 @@ import com.api.project.exception.BusinessException;
 import com.api.project.model.dto.userInterfaceinfo.UserInterfaceInfoAddRequest;
 import com.api.project.model.dto.userInterfaceinfo.UserInterfaceInfoQueryRequest;
 import com.api.project.model.dto.userInterfaceinfo.UserInterfaceInfoUpdateRequest;
-import com.api.project.model.entity.User;
-import com.api.project.model.entity.UserInterfaceInfo;
 import com.api.project.service.UserInterfaceInfoService;
 import com.api.project.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;

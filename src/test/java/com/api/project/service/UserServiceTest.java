@@ -1,8 +1,5 @@
 package com.api.project.service;
 
-import com.api.project.model.entity.User;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;

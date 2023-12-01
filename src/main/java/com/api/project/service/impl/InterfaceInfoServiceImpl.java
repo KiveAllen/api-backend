@@ -1,9 +1,9 @@
 package com.api.project.service.impl;
 
+import com.api.apicommon.model.entity.InterfaceInfo;
 import com.api.project.common.ErrorCode;
 import com.api.project.exception.BusinessException;
 import com.api.project.mapper.InterfaceInfoMapper;
-import com.api.project.model.entity.InterfaceInfo;
 import com.api.project.service.InterfaceInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;

@@ -1,6 +1,6 @@
 package com.api.project.service;
 
-import com.api.project.model.entity.InterfaceInfo;
+import com.api.apicommon.model.entity.InterfaceInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
